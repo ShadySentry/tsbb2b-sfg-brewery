@@ -137,5 +137,6 @@ class BeerControllerTest {
                     .andExpect(jsonPath("$.content",hasSize(2)))
                     .andExpect(jsonPath("$.content[0].id",is(validBeer.getId().toString())));
         }
+
     }
 }
