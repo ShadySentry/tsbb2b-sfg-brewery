@@ -71,8 +71,7 @@ class BeerOrderControllerTest {
     @Test
     void listOrders() throws Exception {
         given(orderService.listOrders(any(), any())).willReturn(beerPagedList);
-        int id = 1;
-
+        UUID id = UUID.randomUUID();
         MvcResult result = mockMvc.perform(get("/api/v1/customers/" + id + "/orders"))
                 .andExpect(status().isOk()).andReturn();
         System.out.println(result);
