@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -21,7 +22,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.reset;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.core.Is.is;
 
 @WebMvcTest(BeerOrderController.class)
 class BeerOrderControllerTest {
@@ -73,11 +75,23 @@ class BeerOrderControllerTest {
         given(orderService.listOrders(any(), any())).willReturn(beerPagedList);
         UUID id = UUID.randomUUID();
         MvcResult result = mockMvc.perform(get("/api/v1/customers/" + id + "/orders"))
-                .andExpect(status().isOk()).andReturn();
-        System.out.println(result);
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
+        System.out.println("=============================result=============================");
+        System.out.println(result.getResponse());
     }
 
     @Test
-    void getOrder() {
+    void getOrder() throws Exception {
+        given(orderService.getOrderById(any(),any())).willReturn(beerOrder);
+
+        UUID randomCustomerId = UUID.randomUUID();
+
+        mockMvc.perform(get("/api/v1/customers/"+randomCustomerId+"/orders/"+beerOrder.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.customerId",is(beerOrder.getCustomerId())));
+//                .andExpect(jsonPath("$.beerOrderLines",is(beerOrder.getBeerOrderLines())));
     }
 }

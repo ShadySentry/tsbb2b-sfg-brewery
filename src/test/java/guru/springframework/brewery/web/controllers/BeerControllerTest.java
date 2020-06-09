@@ -1,30 +1,19 @@
 package guru.springframework.brewery.web.controllers;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import guru.springframework.brewery.services.BeerService;
 import guru.springframework.brewery.web.model.BeerDto;
 import guru.springframework.brewery.web.model.BeerPagedList;
 import guru.springframework.brewery.web.model.BeerStyleEnum;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -77,11 +66,11 @@ class BeerControllerTest {
 
         given(beerService.findBeerById(any())).willReturn(validBeer);
 
-        MvcResult result= mockMvc.perform(get("/api/v1/beer/"+validBeer.getId()))
+        MvcResult result = mockMvc.perform(get("/api/v1/beer/" + validBeer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.id", is(validBeer.getId().toString() )))
-                .andExpect(jsonPath("$.beerName",is("Beer1")))
+                .andExpect(jsonPath("$.id", is(validBeer.getId().toString())))
+                .andExpect(jsonPath("$.beerName", is("Beer1")))
                 .andExpect(jsonPath("$.createdDate",
                         is(dateTimeFormatter.format(validBeer.getCreatedDate()))))
                 .andReturn();
@@ -106,8 +95,8 @@ class BeerControllerTest {
         BeerPagedList beerPagedList;
 
         @BeforeEach
-        void setUp(){
-            List<BeerDto> beers  = new ArrayList<>();
+        void setUp() {
+            List<BeerDto> beers = new ArrayList<>();
 
             beers.add(validBeer);
             beers.add(BeerDto.builder().id(UUID.randomUUID())
@@ -121,9 +110,9 @@ class BeerControllerTest {
                     .lastModifiedDate(OffsetDateTime.now())
                     .build());
 
-            beerPagedList = new BeerPagedList(beers,PageRequest.of(1,1),2L);
+            beerPagedList = new BeerPagedList(beers, PageRequest.of(1, 1), 2L);
 
-            given(beerService.listBeers(beerNameCaptor.capture(),beerStyleEnumCaptor.capture(),
+            given(beerService.listBeers(beerNameCaptor.capture(), beerStyleEnumCaptor.capture(),
                     pageRequestCaptor.capture())).willReturn(beerPagedList);
         }
 
@@ -131,11 +120,11 @@ class BeerControllerTest {
         @Test
         void testListBeers() throws Exception {
             mockMvc.perform(get("/api/v1/beer")
-                        .accept(MediaType.APPLICATION_JSON))
+                    .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.content",hasSize(2)))
-                    .andExpect(jsonPath("$.content[0].id",is(validBeer.getId().toString())));
+                    .andExpect(jsonPath("$.content", hasSize(2)))
+                    .andExpect(jsonPath("$.content[0].id", is(validBeer.getId().toString())));
         }
 
     }
