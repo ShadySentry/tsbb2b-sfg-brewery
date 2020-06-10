@@ -79,7 +79,7 @@ class BeerOrderControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn();
         System.out.println("=============================result=============================");
-        System.out.println(result.getResponse());
+        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
