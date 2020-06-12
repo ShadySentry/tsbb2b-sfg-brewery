@@ -49,7 +49,7 @@ public class BeerOrderStatusChangeEventListener {
                 .version(event.getBeerOrder().getVersion() != null ? event.getBeerOrder().getVersion().intValue() : null)
                 .createdDate(dateMapper.asOffsetDateTime(event.getBeerOrder().getCreatedDate()))
                 .lastModifiedDate(dateMapper.asOffsetDateTime(event.getBeerOrder().getLastModifiedDate()))
-                .orderStatus(event.getBeerOrder().getOrderStatus()).toString()
+                .orderStatus(event.getBeerOrder().getOrderStatus().toString())
                 .customerRef(event.getBeerOrder().getCustomerRef())
                 .build();
 
