@@ -39,7 +39,7 @@ public class DateMapper {
         }
     }
 
-    Timestamp asTimestamp(OffsetDateTime offsetDateTime){
+    public Timestamp asTimestamp(OffsetDateTime offsetDateTime){
         if(offsetDateTime != null) {
             return Timestamp.valueOf(offsetDateTime.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
         } else {
